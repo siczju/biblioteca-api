@@ -1,6 +1,6 @@
 package com.julio.biblioteca_api.service;
 
-import com.julio.biblioteca_api.dto.CreateUserDTO;
+import com.julio.biblioteca_api.dto.CriarUsuarioDTO;
 import com.julio.biblioteca_api.entidades.Pessoa;
 import com.julio.biblioteca_api.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +15,12 @@ public class PessoaService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
-    public Pessoa insert(CreateUserDTO createUserDTO){
+    public Pessoa insert(CriarUsuarioDTO createUserDTO){
         Pessoa pessoa = new Pessoa(null, createUserDTO.name(), createUserDTO.cpf(), createUserDTO.email(), createUserDTO.telefone());
         return pessoaRepository.save(pessoa);
     }
 
-    public Pessoa update(Long id, CreateUserDTO createUserDTO) {
+    public Pessoa update(Long id, CriarUsuarioDTO createUserDTO) {
         Optional<Pessoa> pessoaOptional = pessoaRepository.findById(id);
 
         if(!pessoaOptional.isPresent()){

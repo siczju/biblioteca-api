@@ -1,6 +1,6 @@
 package com.julio.biblioteca_api.controller;
 
-import com.julio.biblioteca_api.dto.CreateUserDTO;
+import com.julio.biblioteca_api.dto.CriarUsuarioDTO;
 import com.julio.biblioteca_api.entidades.Pessoa;
 import com.julio.biblioteca_api.service.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class PessoaController {
     private PessoaService pessoaService;
 
     @PostMapping
-    public ResponseEntity<Pessoa> insert(@RequestBody CreateUserDTO createUserDTO) {
+    public ResponseEntity<Pessoa> insert(@RequestBody CriarUsuarioDTO createUserDTO) {
 
         Pessoa pessoa = pessoaService.insert(createUserDTO);
 
@@ -26,7 +26,7 @@ public class PessoaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pessoa> update(@PathVariable("id") Long id, @RequestBody CreateUserDTO createUserDTO) {
+    public ResponseEntity<Pessoa> update(@PathVariable("id") Long id, @RequestBody CriarUsuarioDTO createUserDTO) {
         Pessoa pessoa =  pessoaService.update(id, createUserDTO);
 
         return ResponseEntity.ok().body(pessoa);
