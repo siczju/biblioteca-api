@@ -1,7 +1,45 @@
 package com.julio.biblioteca_api.service;
 
+import com.julio.biblioteca_api.entidades.Livro;
+import com.julio.biblioteca_api.enums.LivroStatus;
+import com.julio.biblioteca_api.repository.LivroRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class LivroService {
+
+    @Autowired
+    private LivroRepository livroRepository;
+
+    public Livro insert(Livro livro){
+        return livroRepository.save(livro);
+    }
+
+    public Livro update(Long id, Livro livro){
+        Livro livroOriginal = getLivroById(id);
+
+        livroOriginal.setTitulo(livro.getTitulo());
+        livroOriginal.setcategoria(livro.getcategoria());
+        livroOriginal.setTitulo(livro.getTitulo());
+        livroOriginal.setStatus(livro.getStatus());
+
+        return livroRepository.save(livroOriginal);
+    }
+
+    public void deleteLivro(Long id){
+        livroRepository.delete(getLivroById(id));
+    }
+
+    public List<Livro> getAllLivros(){
+        return livroRepository.findAll();
+    }
+
+    public Livro getLivroById(Long id){
+        return livroRepository.findById(id).get();
+    }
+
+
 }

@@ -2,6 +2,7 @@ package com.julio.biblioteca_api.entidades;
 
 import com.julio.biblioteca_api.enums.LivroStatus;
 import jakarta.persistence.*;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -42,10 +43,6 @@ public class Livro {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitulo() {
