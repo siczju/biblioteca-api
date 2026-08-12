@@ -2,11 +2,12 @@ package com.julio.biblioteca_api.service;
 
 import com.julio.biblioteca_api.entidades.Livro;
 import com.julio.biblioteca_api.enums.LivroStatus;
+import com.julio.biblioteca_api.exceptions.ResourceNotFoundException;
 import com.julio.biblioteca_api.repository.LivroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LivroService {
@@ -35,7 +36,12 @@ public class LivroService {
     }
 
     public Livro getLivroById(Long id){
-        return livroRepository.findById(id).get();
+        Optional<Livro> livro = livroRepository.findById(id);
+
+        if(livro.isEmpty())
+            throw new ResourceNotFoundException("Livro não encontrado!");
+
+        return livro.get();
     }
 
 

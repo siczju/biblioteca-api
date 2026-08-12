@@ -2,10 +2,13 @@ package com.julio.biblioteca_api.service;
 
 import com.julio.biblioteca_api.dto.CriarUsuarioDTO;
 import com.julio.biblioteca_api.entidades.Pessoa;
+import com.julio.biblioteca_api.exceptions.CpfAlreadyExistsException;
+import com.julio.biblioteca_api.exceptions.ResourceNotFoundException;
 import com.julio.biblioteca_api.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,31 +19,34 @@ public class PessoaService {
     private PessoaRepository pessoaRepository;
 
     public Pessoa insert(CriarUsuarioDTO createUserDTO){
-        Pessoa pessoa = new Pessoa(createUserDTO.name(), createUserDTO.cpf(), createUserDTO.email(), createUserDTO.telefone());
+
+        if(pessoaRepository.existsByCpf(createUserDTO.cpf()))
+            throw new CpfAlreadyExistsException();
+
+        Pessoa pessoa = new Pessoa(createUserDTO.nome(), createUserDTO.cpf(), createUserDTO.email(), createUserDTO.telefone());
         return pessoaRepository.save(pessoa);
     }
 
     public Pessoa update(Long id, CriarUsuarioDTO createUserDTO) {
-        Optional<Pessoa> pessoaOptional = pessoaRepository.findById(id);
+        Pessoa pessoa= getPessoaById(id);
 
-        if(!pessoaOptional.isPresent()){
-            return null;
+        if (!pessoa.getCpf().equals(createUserDTO.cpf())
+                && pessoaRepository.existsByCpf(createUserDTO.cpf())) {
+            throw new CpfAlreadyExistsException();
         }
 
-        Pessoa pessoaAtualizada = pessoaOptional.get();
+        pessoa.updatePessoa(createUserDTO.nome(), createUserDTO.cpf(), createUserDTO.email(), createUserDTO.telefone());
 
-        pessoaAtualizada.updatePessoa(createUserDTO.name(), createUserDTO.cpf(), createUserDTO.email(), createUserDTO.telefone());
-
-        return pessoaRepository.save(pessoaAtualizada);
+        return pessoaRepository.save(pessoa);
     }
 
     public Pessoa getPessoaById(Long id){
         Optional<Pessoa> pessoaOptional = pessoaRepository.findById(id);
 
-        if(pessoaOptional.isPresent()){
-            return pessoaOptional.get();
-        }
-        return null;
+        if(pessoaOptional.isEmpty())
+            throw new ResourceNotFoundException("Pessoa não encontrada!");
+
+        return pessoaOptional.get();
     }
 
     public List<Pessoa> getAllPessoas(){
@@ -48,7 +54,7 @@ public class PessoaService {
     }
 
     public void  deletePessoa(Long id){
-        pessoaRepository.deleteById(id);
+        pessoaRepository.delete(getPessoaById(id));
     }
 
 

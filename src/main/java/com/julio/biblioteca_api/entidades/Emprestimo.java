@@ -40,5 +40,5 @@ public class Emprestimo {
         this.dataDoEmprestimo = LocalDate.now();
         this.dataDoVencimentoDoEmprestimo = LocalDate.now().plusDays(7);
     }
-    
+
 }
