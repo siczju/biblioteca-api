@@ -16,7 +16,7 @@ public class PessoaService {
     private PessoaRepository pessoaRepository;
 
     public Pessoa insert(CriarUsuarioDTO createUserDTO){
-        Pessoa pessoa = new Pessoa(null, createUserDTO.name(), createUserDTO.cpf(), createUserDTO.email(), createUserDTO.telefone());
+        Pessoa pessoa = new Pessoa(createUserDTO.name(), createUserDTO.cpf(), createUserDTO.email(), createUserDTO.telefone());
         return pessoaRepository.save(pessoa);
     }
 
@@ -29,10 +29,7 @@ public class PessoaService {
 
         Pessoa pessoaAtualizada = pessoaOptional.get();
 
-        pessoaAtualizada.setNome(createUserDTO.name());
-        pessoaAtualizada.setCpf(createUserDTO.cpf());
-        pessoaAtualizada.setEmail(createUserDTO.email());
-        pessoaAtualizada.setTelefone(createUserDTO.telefone());
+        pessoaAtualizada.updatePessoa(createUserDTO.name(), createUserDTO.cpf(), createUserDTO.email(), createUserDTO.telefone());
 
         return pessoaRepository.save(pessoaAtualizada);
     }

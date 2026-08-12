@@ -21,10 +21,7 @@ public class LivroService {
     public Livro update(Long id, Livro livro){
         Livro livroOriginal = getLivroById(id);
 
-        livroOriginal.setTitulo(livro.getTitulo());
-        livroOriginal.setcategoria(livro.getcategoria());
-        livroOriginal.setTitulo(livro.getTitulo());
-        livroOriginal.setStatus(livro.getStatus());
+        livroOriginal.updateLivro(livro.getTitulo(), livro.getDescricao(), livro.getCategoria(), livro.getStatus());
 
         return livroRepository.save(livroOriginal);
     }
