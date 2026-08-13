@@ -1,5 +1,6 @@
 package com.julio.biblioteca_api.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,7 @@ public class Pessoa {
 
     private String telefone;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "pessoa")
     private Set<Emprestimo> emprestimos = new HashSet<Emprestimo>();
 

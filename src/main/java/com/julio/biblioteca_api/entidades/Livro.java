@@ -1,12 +1,9 @@
 package com.julio.biblioteca_api.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.julio.biblioteca_api.enums.LivroStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
-
-import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -30,8 +27,9 @@ public class Livro {
     @Enumerated(EnumType.STRING)
     private LivroStatus status;
 
-    @OneToOne(mappedBy = "livro")
-    private Emprestimo emprestimo;
+    @JsonIgnore
+    @OneToMany(mappedBy = "livro")
+    private Set<Emprestimo> emprestimos;
 
     public Livro(String titulo, String descricao, String categoria, LivroStatus status) {
         this.titulo = titulo;
@@ -47,6 +45,14 @@ public class Livro {
         this.status = status;
 
         return this;
+    }
+
+    public void updateStatusDisponivel() {
+        this.status = LivroStatus.DISPONIVEL;
+    }
+
+    public void updateStatusEmprestado() {
+        this.status = LivroStatus.EMPRESTADO;
     }
 
 }

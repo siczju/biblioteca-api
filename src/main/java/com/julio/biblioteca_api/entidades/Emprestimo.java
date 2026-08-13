@@ -24,7 +24,7 @@ public class Emprestimo {
     @JoinColumn(name = "pessoa_id")
     private Pessoa pessoa;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "livro_id")
     private Livro livro;
 
@@ -39,6 +39,10 @@ public class Emprestimo {
         this.livro = livro;
         this.dataDoEmprestimo = LocalDate.now();
         this.dataDoVencimentoDoEmprestimo = LocalDate.now().plusDays(7);
+    }
+
+    public void devolver() {
+        this.dataDoRetorno = LocalDate.now();
     }
 
 }
