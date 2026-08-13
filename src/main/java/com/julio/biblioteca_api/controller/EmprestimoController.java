@@ -5,6 +5,7 @@ import com.julio.biblioteca_api.dto.EmprestimoResponseDTO;
 import com.julio.biblioteca_api.entidades.Emprestimo;
 import com.julio.biblioteca_api.service.EmprestimoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +30,8 @@ public class EmprestimoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EmprestimoResponseDTO>> findAll() {
-        return ResponseEntity.ok(emprestimoService.findAll());
+    public ResponseEntity<List<EmprestimoResponseDTO>> findAll(@RequestParam int paginas, @RequestParam int itens) {
+        return ResponseEntity.ok(emprestimoService.findAll(paginas, itens));
     }
 
     @GetMapping("/{id}")

@@ -10,6 +10,9 @@ import com.julio.biblioteca_api.exceptions.LoanLimitExceededException;
 import com.julio.biblioteca_api.exceptions.ResourceNotFoundException;
 import com.julio.biblioteca_api.repository.EmprestimoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -98,15 +101,10 @@ public class EmprestimoService {
         emprestimoRepository.delete(emprestimo);
     }
 
-    public List<EmprestimoResponseDTO> findAll() {
-        List<Emprestimo> emprestimos = emprestimoRepository.findAll();
-        List<EmprestimoResponseDTO> dtos = new ArrayList<>();
+    public List<EmprestimoResponseDTO> findAll(int paginas, int itens) {
+        Page<Emprestimo> emprestimos = emprestimoRepository.findAll(PageRequest.of(paginas, itens));
 
-        for(Emprestimo emprestimo : emprestimos) {
-            dtos.add(toDTO(emprestimo));
-        }
-
-        return dtos;
+        return emprestimos.map(emprestimo -> toDTO(emprestimo)).getContent();
     }
 
     public EmprestimoResponseDTO findById(Long id) {
