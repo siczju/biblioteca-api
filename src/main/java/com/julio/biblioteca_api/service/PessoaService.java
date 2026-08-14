@@ -1,15 +1,17 @@
 package com.julio.biblioteca_api.service;
 
 import com.julio.biblioteca_api.dto.CriarUsuarioDTO;
+import com.julio.biblioteca_api.dto.PageResponseDTO;
+import com.julio.biblioteca_api.dto.PessoaResponseDTO;
 import com.julio.biblioteca_api.entidades.Pessoa;
 import com.julio.biblioteca_api.exceptions.CpfAlreadyExistsException;
 import com.julio.biblioteca_api.exceptions.ResourceNotFoundException;
 import com.julio.biblioteca_api.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,7 +30,7 @@ public class PessoaService {
     }
 
     public Pessoa update(Long id, CriarUsuarioDTO createUserDTO) {
-        Pessoa pessoa= getPessoaById(id);
+        Pessoa pessoa = getPessoaEntityById(id);
 
         if (!pessoa.getCpf().equals(createUserDTO.cpf())
                 && pessoaRepository.existsByCpf(createUserDTO.cpf())) {
@@ -40,7 +42,16 @@ public class PessoaService {
         return pessoaRepository.save(pessoa);
     }
 
-    public Pessoa getPessoaById(Long id){
+    public PessoaResponseDTO getPessoaById(Long id) {
+        Optional<Pessoa> pessoaOptional = pessoaRepository.findById(id);
+
+        if(pessoaOptional.isEmpty())
+            throw new ResourceNotFoundException("Pessoa não encontrada!");
+
+        return toDTO(pessoaOptional.get());
+    }
+
+    public Pessoa getPessoaEntityById(Long id) {
         Optional<Pessoa> pessoaOptional = pessoaRepository.findById(id);
 
         if(pessoaOptional.isEmpty())
@@ -49,15 +60,36 @@ public class PessoaService {
         return pessoaOptional.get();
     }
 
-    public List<Pessoa> getAllPessoas(){
-        return pessoaRepository.findAll();
+    public PageResponseDTO<PessoaResponseDTO> getAllPessoas(int pagina, int itens) {
+
+        Page<Pessoa> pessoas =
+                pessoaRepository.findAll(PageRequest.of(pagina, itens));
+
+        Page<PessoaResponseDTO> dtos =
+                pessoas.map(this::toDTO);
+
+        return new PageResponseDTO<>(
+                dtos.getContent(),
+                pessoas.getNumber(),
+                pessoas.getTotalPages(),
+                pessoas.getTotalElements(),
+                pessoas.getSize(),
+                pessoas.isFirst(),
+                pessoas.isLast()
+        );
     }
 
-    public void  deletePessoa(Long id){
-        pessoaRepository.delete(getPessoaById(id));
+    public void deletePessoa(Long id){
+        pessoaRepository.delete(getPessoaEntityById(id));
     }
 
-
-
-
+    public PessoaResponseDTO toDTO(Pessoa pessoa) {
+        return new PessoaResponseDTO(
+                pessoa.getId(),
+                pessoa.getNome(),
+                pessoa.getCpf(),
+                pessoa.getEmail(),
+                pessoa.getTelefone()
+        );
+    }
 }

@@ -1,6 +1,7 @@
 package com.julio.biblioteca_api.service;
 
 import com.julio.biblioteca_api.dto.EmprestimoResponseDTO;
+import com.julio.biblioteca_api.dto.PageResponseDTO;
 import com.julio.biblioteca_api.entidades.Emprestimo;
 import com.julio.biblioteca_api.entidades.Livro;
 import com.julio.biblioteca_api.entidades.Pessoa;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,8 +35,8 @@ public class EmprestimoService {
     private LivroService livroService;
 
     public Emprestimo emprestar(Long pessoaId, Long livroId) {
-        Pessoa pessoa = pessoaService.getPessoaById(pessoaId);
-        Livro livro = livroService.getLivroById(livroId);
+        Pessoa pessoa = pessoaService.getPessoaEntityById(pessoaId);
+        Livro livro = livroService.getLivroEntityById(livroId);
 
         long quantidade = contarQtdeEmprestimos(pessoa);
 
@@ -53,13 +56,48 @@ public class EmprestimoService {
     }
 
     public EmprestimoResponseDTO toDTO(Emprestimo emprestimo) {
+
+        long diasEmprestado;
+
+        if (emprestimo.getDataDoRetorno() == null) {
+            diasEmprestado = ChronoUnit.DAYS.between(
+                    emprestimo.getDataDoEmprestimo(),
+                    LocalDate.now()
+            );
+        } else {
+            diasEmprestado = ChronoUnit.DAYS.between(
+                    emprestimo.getDataDoEmprestimo(),
+                    emprestimo.getDataDoRetorno()
+            );
+        }
+
+        String status;
+
+        if (emprestimo.getDataDoRetorno() == null) {
+            status = "EMPRESTADO";
+        } else {
+            status = "DEVOLVIDO";
+        }
+
+        boolean atrasado = false;
+
+        if (emprestimo.getDataDoRetorno() == null
+                && LocalDate.now().isAfter(emprestimo.getDataDoVencimentoDoEmprestimo())) {
+            atrasado = true;
+        }
+
         return new EmprestimoResponseDTO(
                 emprestimo.getId(),
+                emprestimo.getPessoa().getId(),
                 emprestimo.getPessoa().getNome(),
+                emprestimo.getLivro().getId(),
                 emprestimo.getLivro().getTitulo(),
                 emprestimo.getDataDoEmprestimo(),
                 emprestimo.getDataDoVencimentoDoEmprestimo(),
-                emprestimo.getDataDoRetorno()
+                emprestimo.getDataDoRetorno(),
+                diasEmprestado,
+                status,
+                atrasado
         );
     }
 
@@ -101,10 +139,22 @@ public class EmprestimoService {
         emprestimoRepository.delete(emprestimo);
     }
 
-    public List<EmprestimoResponseDTO> findAll(int paginas, int itens) {
-        Page<Emprestimo> emprestimos = emprestimoRepository.findAll(PageRequest.of(paginas, itens));
+        public PageResponseDTO<EmprestimoResponseDTO> findAll(int paginas, int itens) {
+            Page<Emprestimo> emprestimos =
+                    emprestimoRepository.findAll(PageRequest.of(paginas, itens));
 
-        return emprestimos.map(emprestimo -> toDTO(emprestimo)).getContent();
+            Page<EmprestimoResponseDTO> dtos =
+                    emprestimos.map(emprestimo -> toDTO(emprestimo));
+
+            return new PageResponseDTO<>(
+                    dtos.getContent(),
+                    emprestimos.getNumber(),
+                    emprestimos.getTotalPages(),
+                    emprestimos.getTotalElements(),
+                    emprestimos.getSize(),
+                    emprestimos.isFirst(),
+                    emprestimos.isLast()
+            );
     }
 
     public EmprestimoResponseDTO findById(Long id) {

@@ -1,10 +1,14 @@
 package com.julio.biblioteca_api.service;
 
+import com.julio.biblioteca_api.dto.LivroResponseDTO;
+import com.julio.biblioteca_api.dto.PageResponseDTO;
 import com.julio.biblioteca_api.entidades.Livro;
 import com.julio.biblioteca_api.enums.LivroStatus;
 import com.julio.biblioteca_api.exceptions.ResourceNotFoundException;
 import com.julio.biblioteca_api.repository.LivroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +24,7 @@ public class LivroService {
     }
 
     public Livro update(Long id, Livro livro){
-        Livro livroOriginal = getLivroById(id);
+        Livro livroOriginal = getLivroEntityById(id);
 
         livroOriginal.updateLivro(livro.getTitulo(), livro.getDescricao(), livro.getCategoria(), livro.getStatus());
 
@@ -28,21 +32,54 @@ public class LivroService {
     }
 
     public void deleteLivro(Long id){
-        livroRepository.delete(getLivroById(id));
+        livroRepository.delete(getLivroEntityById(id));
     }
 
-    public List<Livro> getAllLivros(){
-        return livroRepository.findAll();
+    public PageResponseDTO<LivroResponseDTO> getAllLivros(int pagina, int itens) {
+
+        Page<Livro> livros =
+                livroRepository.findAll(PageRequest.of(pagina, itens));
+
+        Page<LivroResponseDTO> dtos =
+                livros.map(this::toDTO);
+
+        return new PageResponseDTO<>(
+                dtos.getContent(),
+                livros.getNumber(),
+                livros.getTotalPages(),
+                livros.getTotalElements(),
+                livros.getSize(),
+                livros.isFirst(),
+                livros.isLast()
+        );
     }
 
-    public Livro getLivroById(Long id){
+    public LivroResponseDTO getLivroById(Long id) {
         Optional<Livro> livro = livroRepository.findById(id);
 
-        if(livro.isEmpty())
+        if (livro.isEmpty())
+            throw new ResourceNotFoundException("Livro não encontrado!");
+
+        return toDTO(livro.get());
+    }
+
+    public Livro getLivroEntityById(Long id) {
+        Optional<Livro> livro = livroRepository.findById(id);
+
+        if (livro.isEmpty())
             throw new ResourceNotFoundException("Livro não encontrado!");
 
         return livro.get();
     }
 
+    public LivroResponseDTO toDTO(Livro livro) {
+        return new LivroResponseDTO(
+                livro.getId(),
+                livro.getTitulo(),
+                livro.getDescricao(),
+                livro.getCategoria(),
+                livro.getStatus()
+        );
+    }
 
 }

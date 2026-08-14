@@ -2,15 +2,14 @@ package com.julio.biblioteca_api.controller;
 
 import com.julio.biblioteca_api.dto.CriarEmprestimoDTO;
 import com.julio.biblioteca_api.dto.EmprestimoResponseDTO;
+import com.julio.biblioteca_api.dto.PageResponseDTO;
 import com.julio.biblioteca_api.entidades.Emprestimo;
 import com.julio.biblioteca_api.service.EmprestimoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/emprestimos")
@@ -20,9 +19,13 @@ public class EmprestimoController {
     private EmprestimoService emprestimoService;
 
     @PostMapping
-    public ResponseEntity<Emprestimo> emprestar(@RequestBody CriarEmprestimoDTO criarEmprestimoDTO) {
+    public ResponseEntity<Emprestimo> emprestar(
+            @RequestBody CriarEmprestimoDTO criarEmprestimoDTO) {
 
-        Emprestimo emprestimo = emprestimoService.emprestar(criarEmprestimoDTO.pessoaId(), criarEmprestimoDTO.livroId());
+        Emprestimo emprestimo = emprestimoService.emprestar(
+                criarEmprestimoDTO.pessoaId(),
+                criarEmprestimoDTO.livroId()
+        );
 
         return ResponseEntity
                 .created(URI.create("/emprestimos/" + emprestimo.getId()))
@@ -30,13 +33,22 @@ public class EmprestimoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EmprestimoResponseDTO>> findAll(@RequestParam int paginas, @RequestParam int itens) {
-        return ResponseEntity.ok(emprestimoService.findAll(paginas, itens));
+    public ResponseEntity<PageResponseDTO<EmprestimoResponseDTO>> findAll(
+            @RequestParam int pagina,
+            @RequestParam int itens) {
+
+        return ResponseEntity.ok(
+                emprestimoService.findAll(pagina, itens)
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmprestimoResponseDTO> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(emprestimoService.findById(id));
+    public ResponseEntity<EmprestimoResponseDTO> findById(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                emprestimoService.findById(id)
+        );
     }
 
     @PutMapping("/devolver/{id}")
@@ -50,5 +62,4 @@ public class EmprestimoController {
         emprestimoService.deleteEmprestimo(id);
         return ResponseEntity.noContent().build();
     }
-
 }
