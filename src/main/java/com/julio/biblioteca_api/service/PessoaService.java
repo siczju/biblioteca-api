@@ -92,4 +92,50 @@ public class PessoaService {
                 pessoa.getTelefone()
         );
     }
+
+    public PageResponseDTO<PessoaResponseDTO> findByNome(
+            String nome, int pagina, int itens) {
+
+        Page<Pessoa> pessoas =
+                pessoaRepository.findByNomeContainingIgnoreCase(
+                        nome,
+                        PageRequest.of(pagina, itens)
+                );
+
+        Page<PessoaResponseDTO> dtos =
+                pessoas.map(this::toDTO);
+
+        return new PageResponseDTO<>(
+                dtos.getContent(),
+                pessoas.getNumber(),
+                pessoas.getTotalPages(),
+                pessoas.getTotalElements(),
+                pessoas.getSize(),
+                pessoas.isFirst(),
+                pessoas.isLast()
+        );
+    }
+
+    public PageResponseDTO<PessoaResponseDTO> findByCpf(
+            String cpf, int pagina, int itens) {
+
+        Page<Pessoa> pessoas =
+                pessoaRepository.findByCpfContaining(
+                        cpf,
+                        PageRequest.of(pagina, itens)
+                );
+
+        Page<PessoaResponseDTO> dtos =
+                pessoas.map(this::toDTO);
+
+        return new PageResponseDTO<>(
+                dtos.getContent(),
+                pessoas.getNumber(),
+                pessoas.getTotalPages(),
+                pessoas.getTotalElements(),
+                pessoas.getSize(),
+                pessoas.isFirst(),
+                pessoas.isLast()
+        );
+    }
 }

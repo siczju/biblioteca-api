@@ -48,14 +48,27 @@ public class PessoaController {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponseDTO<PessoaResponseDTO>> getAllPessoas(
+    public ResponseEntity<PageResponseDTO<PessoaResponseDTO>> getAll(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String cpf,
             @RequestParam int pagina,
             @RequestParam int itens) {
 
-        PageResponseDTO<PessoaResponseDTO> pessoas =
-                pessoaService.getAllPessoas(pagina, itens);
+        if (nome != null && !nome.isBlank()) {
+            return ResponseEntity.ok(
+                    pessoaService.findByNome(nome, pagina, itens)
+            );
+        }
 
-        return ResponseEntity.ok().body(pessoas);
+        if (cpf != null && !cpf.isBlank()) {
+            return ResponseEntity.ok(
+                    pessoaService.findByCpf(cpf, pagina, itens)
+            );
+        }
+
+        return ResponseEntity.ok(
+                pessoaService.getAllPessoas(pagina, itens)
+        );
     }
 
     @DeleteMapping("/{id}")

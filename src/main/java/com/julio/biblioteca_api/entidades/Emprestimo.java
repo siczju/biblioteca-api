@@ -1,5 +1,6 @@
 package com.julio.biblioteca_api.entidades;
 
+import com.julio.biblioteca_api.enums.EmprestimoStatus;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,6 +29,9 @@ public class Emprestimo {
     @JoinColumn(name = "livro_id")
     private Livro livro;
 
+    @Enumerated(EnumType.STRING)
+    private EmprestimoStatus status;
+
     private LocalDate dataDoEmprestimo;
 
     private LocalDate dataDoVencimentoDoEmprestimo;
@@ -39,10 +43,12 @@ public class Emprestimo {
         this.livro = livro;
         this.dataDoEmprestimo = LocalDate.now();
         this.dataDoVencimentoDoEmprestimo = LocalDate.now().plusDays(7);
+        this.status = EmprestimoStatus.EMPRESTADO;
     }
 
     public void devolver() {
         this.dataDoRetorno = LocalDate.now();
+        this.status = EmprestimoStatus.DEVOLVIDO;
     }
 
 }

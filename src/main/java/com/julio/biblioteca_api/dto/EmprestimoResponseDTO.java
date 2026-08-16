@@ -1,5 +1,8 @@
 package com.julio.biblioteca_api.dto;
 
+import com.julio.biblioteca_api.entidades.Emprestimo;
+import com.julio.biblioteca_api.enums.EmprestimoStatus;
+
 import java.time.LocalDate;
 
 public record EmprestimoResponseDTO(
@@ -12,6 +15,6 @@ public record EmprestimoResponseDTO(
         LocalDate dataDoVencimentoDoEmprestimo,
         LocalDate dataDoRetorno,
         long diasEmprestado,
-        String status,
+        EmprestimoStatus status,
         boolean atrasado
 ) {}

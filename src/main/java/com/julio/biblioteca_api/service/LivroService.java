@@ -82,4 +82,27 @@ public class LivroService {
         );
     }
 
+    public PageResponseDTO<LivroResponseDTO> findByTitulo(
+            String titulo, int pagina, int itens) {
+
+        Page<Livro> livros =
+                livroRepository.findByTituloContainingIgnoreCase(
+                        titulo,
+                        PageRequest.of(pagina, itens)
+                );
+
+        Page<LivroResponseDTO> dtos =
+                livros.map(this::toDTO);
+
+        return new PageResponseDTO<>(
+                dtos.getContent(),
+                livros.getNumber(),
+                livros.getTotalPages(),
+                livros.getTotalElements(),
+                livros.getSize(),
+                livros.isFirst(),
+                livros.isLast()
+        );
+    }
+
 }

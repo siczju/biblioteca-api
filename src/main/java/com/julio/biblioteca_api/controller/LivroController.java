@@ -45,10 +45,18 @@ public class LivroController {
 
     @GetMapping
     public ResponseEntity<PageResponseDTO<LivroResponseDTO>> getAll(
+            @RequestParam(required = false) String titulo,
             @RequestParam int pagina,
-            @RequestParam int itens){
+            @RequestParam int itens) {
 
-        return ResponseEntity.ok()
-                .body(livroService.getAllLivros(pagina, itens));
+        if (titulo == null || titulo.isBlank()) {
+            return ResponseEntity.ok(
+                    livroService.getAllLivros(pagina, itens)
+            );
+        }
+
+        return ResponseEntity.ok(
+                livroService.findByTitulo(titulo, pagina, itens)
+        );
     }
 }

@@ -5,6 +5,7 @@ import com.julio.biblioteca_api.dto.PageResponseDTO;
 import com.julio.biblioteca_api.entidades.Emprestimo;
 import com.julio.biblioteca_api.entidades.Livro;
 import com.julio.biblioteca_api.entidades.Pessoa;
+import com.julio.biblioteca_api.enums.EmprestimoStatus;
 import com.julio.biblioteca_api.enums.LivroStatus;
 import com.julio.biblioteca_api.exceptions.BookUnavailableException;
 import com.julio.biblioteca_api.exceptions.LoanLimitExceededException;
@@ -71,14 +72,6 @@ public class EmprestimoService {
             );
         }
 
-        String status;
-
-        if (emprestimo.getDataDoRetorno() == null) {
-            status = "EMPRESTADO";
-        } else {
-            status = "DEVOLVIDO";
-        }
-
         boolean atrasado = false;
 
         if (emprestimo.getDataDoRetorno() == null
@@ -96,7 +89,7 @@ public class EmprestimoService {
                 emprestimo.getDataDoVencimentoDoEmprestimo(),
                 emprestimo.getDataDoRetorno(),
                 diasEmprestado,
-                status,
+                emprestimo.getStatus(),
                 atrasado
         );
     }
@@ -106,7 +99,7 @@ public class EmprestimoService {
 
         long quantidade = (emprestimos.stream()
                 .filter(e -> e.getPessoa().equals(pessoa))
-                .filter(e -> e.getLivro().getStatus().equals(LivroStatus.EMPRESTADO))
+                .filter(e -> e.getStatus().equals(EmprestimoStatus.EMPRESTADO))
                 .count());
 
         return quantidade;
@@ -174,5 +167,52 @@ public class EmprestimoService {
 
         return emprestimoOptional.get();
     }
+
+    public PageResponseDTO<EmprestimoResponseDTO> findByPessoa(
+            Long pessoaId, int pagina, int itens) {
+
+        Page<Emprestimo> emprestimos =
+                emprestimoRepository.findByPessoaId(
+                        pessoaId,
+                        PageRequest.of(pagina, itens)
+                );
+
+        Page<EmprestimoResponseDTO> dtos =
+                emprestimos.map(this::toDTO);
+
+        return new PageResponseDTO<>(
+                dtos.getContent(),
+                emprestimos.getNumber(),
+                emprestimos.getTotalPages(),
+                emprestimos.getTotalElements(),
+                emprestimos.getSize(),
+                emprestimos.isFirst(),
+                emprestimos.isLast()
+        );
+    }
+
+    public PageResponseDTO<EmprestimoResponseDTO> findByStatus(
+            EmprestimoStatus status, int pagina, int itens) {
+
+        Page<Emprestimo> emprestimos =
+                emprestimoRepository.findByStatus(
+                        status,
+                        PageRequest.of(pagina, itens)
+                );
+
+        Page<EmprestimoResponseDTO> dtos =
+                emprestimos.map(this::toDTO);
+
+        return new PageResponseDTO<>(
+                dtos.getContent(),
+                emprestimos.getNumber(),
+                emprestimos.getTotalPages(),
+                emprestimos.getTotalElements(),
+                emprestimos.getSize(),
+                emprestimos.isFirst(),
+                emprestimos.isLast()
+        );
+    }
+
 }
 
