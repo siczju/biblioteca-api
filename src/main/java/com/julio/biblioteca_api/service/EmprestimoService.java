@@ -1,6 +1,7 @@
 package com.julio.biblioteca_api.service;
 
 import com.julio.biblioteca_api.dto.EmprestimoResponseDTO;
+import com.julio.biblioteca_api.dto.MeuEmprestimoResponseDTO;
 import com.julio.biblioteca_api.dto.PageResponseDTO;
 import com.julio.biblioteca_api.entidades.Emprestimo;
 import com.julio.biblioteca_api.entidades.Livro;
@@ -202,6 +203,67 @@ public class EmprestimoService {
 
         Page<EmprestimoResponseDTO> dtos =
                 emprestimos.map(this::toDTO);
+
+        return new PageResponseDTO<>(
+                dtos.getContent(),
+                emprestimos.getNumber(),
+                emprestimos.getTotalPages(),
+                emprestimos.getTotalElements(),
+                emprestimos.getSize(),
+                emprestimos.isFirst(),
+                emprestimos.isLast()
+        );
+    }
+
+    public MeuEmprestimoResponseDTO toMeuEmprestimoDTO(Emprestimo emprestimo) {
+
+        long diasEmprestado;
+
+        if (emprestimo.getDataDoRetorno() == null) {
+            diasEmprestado = ChronoUnit.DAYS.between(
+                    emprestimo.getDataDoEmprestimo(),
+                    LocalDate.now()
+            );
+        } else {
+            diasEmprestado = ChronoUnit.DAYS.between(
+                    emprestimo.getDataDoEmprestimo(),
+                    emprestimo.getDataDoRetorno()
+            );
+        }
+
+        boolean atrasado = false;
+
+        if (emprestimo.getDataDoRetorno() == null
+                && LocalDate.now().isAfter(
+                emprestimo.getDataDoVencimentoDoEmprestimo())) {
+            atrasado = true;
+        }
+
+        return new MeuEmprestimoResponseDTO(
+                emprestimo.getId(),
+                emprestimo.getLivro().getId(),
+                emprestimo.getLivro().getTitulo(),
+                emprestimo.getDataDoEmprestimo(),
+                emprestimo.getDataDoVencimentoDoEmprestimo(),
+                emprestimo.getDataDoRetorno(),
+                diasEmprestado,
+                atrasado
+        );
+    }
+
+    public PageResponseDTO<MeuEmprestimoResponseDTO> findMeusEmprestimos(
+            Long pessoaId,
+            int pagina,
+            int itens) {
+
+        Page<Emprestimo> emprestimos =
+                emprestimoRepository.findByPessoaId(
+                        pessoaId,
+                        PageRequest.of(pagina, itens)
+                );
+
+        Page<MeuEmprestimoResponseDTO> dtos =
+                emprestimos.map(this::toMeuEmprestimoDTO);
 
         return new PageResponseDTO<>(
                 dtos.getContent(),

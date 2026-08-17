@@ -1,9 +1,11 @@
 package com.julio.biblioteca_api.controller;
 
 import com.julio.biblioteca_api.dto.CriarUsuarioDTO;
+import com.julio.biblioteca_api.dto.MeuEmprestimoResponseDTO;
 import com.julio.biblioteca_api.dto.PageResponseDTO;
 import com.julio.biblioteca_api.dto.PessoaResponseDTO;
 import com.julio.biblioteca_api.entidades.Pessoa;
+import com.julio.biblioteca_api.service.EmprestimoService;
 import com.julio.biblioteca_api.service.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,9 @@ import java.net.URI;
 @RestController
 @RequestMapping(value = "/pessoas")
 public class PessoaController {
+
+    @Autowired
+    private EmprestimoService emprestimoService;
 
     @Autowired
     private PessoaService pessoaService;
@@ -76,4 +81,16 @@ public class PessoaController {
         pessoaService.deletePessoa(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}/emprestimos")
+    public ResponseEntity<PageResponseDTO<MeuEmprestimoResponseDTO>> getMeusEmprestimos(
+            @PathVariable Long id,
+            @RequestParam int pagina,
+            @RequestParam int itens) {
+
+        return ResponseEntity.ok(
+                emprestimoService.findMeusEmprestimos(id, pagina, itens)
+        );
+    }
+
 }

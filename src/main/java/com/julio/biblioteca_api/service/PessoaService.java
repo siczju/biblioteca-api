@@ -1,6 +1,7 @@
 package com.julio.biblioteca_api.service;
 
 import com.julio.biblioteca_api.dto.CriarUsuarioDTO;
+import com.julio.biblioteca_api.dto.LoginResponseDTO;
 import com.julio.biblioteca_api.dto.PageResponseDTO;
 import com.julio.biblioteca_api.dto.PessoaResponseDTO;
 import com.julio.biblioteca_api.entidades.Pessoa;
@@ -138,4 +139,22 @@ public class PessoaService {
                 pessoas.isLast()
         );
     }
+
+    public LoginResponseDTO login(String cpf) {
+
+        Optional<Pessoa> pessoaOptional = pessoaRepository.findByCpf(cpf);
+
+        if (pessoaOptional.isEmpty()) {
+            throw new ResourceNotFoundException("CPF não cadastrado!");
+        }
+
+        Pessoa pessoa = pessoaOptional.get();
+
+        return new LoginResponseDTO(
+                pessoa.getId(),
+                pessoa.getNome(),
+                pessoa.getCpf()
+        );
+    }
+
 }
