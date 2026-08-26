@@ -7,5 +7,6 @@ public record LivroResponseDTO(
         String titulo,
         String descricao,
         String categoria,
+        String autor,
         LivroStatus status
 ) {}

@@ -21,6 +21,9 @@ public class PessoaService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
+    @Autowired
+    private UsuarioLogadoService usuarioLogadoService;
+
     public Pessoa insert(CriarUsuarioDTO createUserDTO){
 
         if(pessoaRepository.existsByCpf(createUserDTO.cpf()))
@@ -117,6 +120,16 @@ public class PessoaService {
         );
     }
 
+    public Pessoa getPessoaEntityByCpf(String cpf) {
+        Optional<Pessoa> pessoaOptional = pessoaRepository.findByCpf(cpf);
+
+        if (pessoaOptional.isEmpty()) {
+            throw new ResourceNotFoundException("Pessoa não encontrada!");
+        }
+
+        return pessoaOptional.get();
+    }
+
     public PageResponseDTO<PessoaResponseDTO> findByCpf(
             String cpf, int pagina, int itens) {
 
@@ -149,6 +162,8 @@ public class PessoaService {
         }
 
         Pessoa pessoa = pessoaOptional.get();
+
+        usuarioLogadoService.setCpf(pessoa.getCpf());
 
         return new LoginResponseDTO(
                 pessoa.getId(),

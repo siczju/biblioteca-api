@@ -15,12 +15,10 @@ import com.julio.biblioteca_api.repository.EmprestimoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +33,9 @@ public class EmprestimoService {
 
     @Autowired
     private LivroService livroService;
+
+    @Autowired
+    private UsuarioLogadoService usuarioLogadoService;
 
     public Emprestimo emprestar(Long pessoaId, Long livroId) {
         Pessoa pessoa = pessoaService.getPessoaEntityById(pessoaId);
@@ -217,7 +218,7 @@ public class EmprestimoService {
 
     public MeuEmprestimoResponseDTO toMeuEmprestimoDTO(Emprestimo emprestimo) {
 
-        long diasEmprestado;
+         long diasEmprestado;
 
         if (emprestimo.getDataDoRetorno() == null) {
             diasEmprestado = ChronoUnit.DAYS.between(
@@ -252,13 +253,23 @@ public class EmprestimoService {
     }
 
     public PageResponseDTO<MeuEmprestimoResponseDTO> findMeusEmprestimos(
-            Long pessoaId,
             int pagina,
             int itens) {
 
+        String cpf = usuarioLogadoService.getCpf();
+
+        if (cpf == null) {
+            throw new ResourceNotFoundException("Usuário não está logado!");
+        }
+
+        Pessoa pessoa =
+                pessoaService.getPessoaEntityByCpf(
+                        usuarioLogadoService.getCpf()
+                );;
+
         Page<Emprestimo> emprestimos =
                 emprestimoRepository.findByPessoaId(
-                        pessoaId,
+                        pessoa.getId(),
                         PageRequest.of(pagina, itens)
                 );
 

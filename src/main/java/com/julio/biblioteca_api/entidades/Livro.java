@@ -24,6 +24,8 @@ public class Livro {
 
     private String categoria;
 
+    private String autor;
+
     @Enumerated(EnumType.STRING)
     private LivroStatus status;
 
@@ -31,17 +33,31 @@ public class Livro {
     @OneToMany(mappedBy = "livro")
     private Set<Emprestimo> emprestimos;
 
-    public Livro(String titulo, String descricao, String categoria, LivroStatus status) {
+    public Livro(
+            String titulo,
+            String descricao,
+            String categoria,
+            String autor,
+            LivroStatus status) {
+
         this.titulo = titulo;
         this.descricao = descricao;
         this.categoria = categoria;
+        this.autor = autor;
         this.status = status;
     }
 
-    public Livro updateLivro(String titulo, String descricao, String categoria, LivroStatus status) {
+    public Livro updateLivro(
+            String titulo,
+            String descricao,
+            String categoria,
+            String autor,
+            LivroStatus status) {
+
         this.titulo = titulo;
         this.descricao = descricao;
         this.categoria = categoria;
+        this.autor = autor;
         this.status = status;
 
         return this;
@@ -54,5 +70,4 @@ public class Livro {
     public void updateStatusEmprestado() {
         this.status = LivroStatus.EMPRESTADO;
     }
-
 }

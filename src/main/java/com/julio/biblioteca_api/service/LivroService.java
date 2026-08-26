@@ -3,14 +3,12 @@ package com.julio.biblioteca_api.service;
 import com.julio.biblioteca_api.dto.LivroResponseDTO;
 import com.julio.biblioteca_api.dto.PageResponseDTO;
 import com.julio.biblioteca_api.entidades.Livro;
-import com.julio.biblioteca_api.enums.LivroStatus;
 import com.julio.biblioteca_api.exceptions.ResourceNotFoundException;
 import com.julio.biblioteca_api.repository.LivroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,7 +24,13 @@ public class LivroService {
     public Livro update(Long id, Livro livro){
         Livro livroOriginal = getLivroEntityById(id);
 
-        livroOriginal.updateLivro(livro.getTitulo(), livro.getDescricao(), livro.getCategoria(), livro.getStatus());
+        livroOriginal.updateLivro(
+                livro.getTitulo(),
+                livro.getDescricao(),
+                livro.getCategoria(),
+                livro.getAutor(),
+                livro.getStatus()
+        );
 
         return livroRepository.save(livroOriginal);
     }
@@ -78,6 +82,7 @@ public class LivroService {
                 livro.getTitulo(),
                 livro.getDescricao(),
                 livro.getCategoria(),
+                livro.getAutor(),
                 livro.getStatus()
         );
     }
