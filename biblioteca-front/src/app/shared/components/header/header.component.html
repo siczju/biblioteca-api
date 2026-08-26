@@ -1,0 +1,40 @@
+<mat-toolbar>
+
+  <img src="assets/logo.png" alt="Logo da empresa" class="logo" />
+
+  <span class="spacer"></span>
+
+  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Abrir menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+</mat-toolbar>
+
+<mat-menu #menu="matMenu">
+
+  <button mat-menu-item routerLink="/livros">
+    <mat-icon>menu_book</mat-icon>
+    <span>Livros</span>
+  </button>
+
+  <button mat-menu-item routerLink="/pessoas">
+    <mat-icon>people</mat-icon>
+    <span>Pessoas</span>
+  </button>
+
+  <button mat-menu-item routerLink="/emprestimos">
+    <mat-icon>swap_horiz</mat-icon>
+    <span>Empréstimos</span>
+  </button>
+
+  <button mat-menu-item routerLink="/meus-emprestimos">
+    <mat-icon>library_books</mat-icon>
+    <span>Meus empréstimos</span>
+  </button>
+
+  <button mat-menu-item routerLink="/login">
+    <mat-icon>logout</mat-icon>
+    <span>Sair</span>
+  </button>
+
+</mat-menu>
