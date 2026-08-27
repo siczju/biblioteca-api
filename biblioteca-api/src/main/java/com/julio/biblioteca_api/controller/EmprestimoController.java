@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
-@CrossOrigin
+@CrossOrigin(
+        origins = "http://localhost:4200",
+        allowCredentials = "true"
+)
 @RestController
 @RequestMapping("/emprestimos")
 public class EmprestimoController {

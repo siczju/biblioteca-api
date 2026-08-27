@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 
 @Component({
@@ -14,7 +14,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -34,6 +35,7 @@ export class LoginComponent implements OnInit {
     this.loginService.login(cpf).subscribe({
       next: (resposta) => {
         console.log('Login realizado com sucesso!', resposta);
+        this.router.navigate(['/emprestimos/meus']);
       },
       error: (erro) => {
         console.error('Erro ao realizar login:', erro);

@@ -16,7 +16,8 @@ export class LoginService {
   login(cpf: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(
       this.apiUrl,
-      { cpf }
+      { cpf },
+      { withCredentials: true }
     );
   }
 }

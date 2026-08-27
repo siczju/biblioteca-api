@@ -4,7 +4,8 @@ import { ListaEmprestimosComponent } from './pages/lista-emprestimos/lista-empre
 import { MeusEmprestimosComponent } from './pages/meus-emprestimos/meus-emprestimos.component';
 import { EmprestimosRoutingModule } from './emprestimos-routing.module';
 import { CadastroEmprestimoComponent } from './pages/cadastro-emprestimo/cadastro-emprestimo.component';
-
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -15,7 +16,9 @@ import { CadastroEmprestimoComponent } from './pages/cadastro-emprestimo/cadastr
   ],
   imports: [
     CommonModule,
-    EmprestimosRoutingModule
+    EmprestimosRoutingModule,
+    MatTableModule,
+    MatButtonModule
   ]
 })
 export class EmprestimosModule { }
