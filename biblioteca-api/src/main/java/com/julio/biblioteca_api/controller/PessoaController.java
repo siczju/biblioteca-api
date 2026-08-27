@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/pessoas")
 public class PessoaController {
