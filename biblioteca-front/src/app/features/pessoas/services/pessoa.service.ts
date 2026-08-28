@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { Pessoa } from '../models/pessoa.model';
 import { Pagina } from 'src/app/models/pagina.model';
 
+import { CriarPessoa } from '../models/criar-pessoa.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,6 +15,16 @@ export class PessoaService {
   private readonly apiUrl = 'http://localhost:8080/pessoas';
 
   constructor(private http: HttpClient) {}
+
+  cadastrarPessoa(pessoa: CriarPessoa): Observable<Pessoa> {
+    return this.http.post<Pessoa>(
+      this.apiUrl,
+      pessoa,
+      {
+        withCredentials: true
+      }
+    );
+  }
 
   listarPessoas(
     pagina: number,

@@ -1,1 +1,116 @@
-<p>cadastro-pessoa works!</p>
+<div class="container">
+
+  <mat-card>
+
+    <mat-card-header>
+      <mat-card-title>
+        Cadastro de Pessoa
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <form
+        [formGroup]="pessoaForm"
+        (ngSubmit)="cadastrar()"
+      >
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nome</mat-label>
+
+          <input
+            matInput
+            type="text"
+            formControlName="nome"
+          >
+
+          <mat-error
+            *ngIf="pessoaForm.get('nome')?.hasError('required')"
+          >
+            Nome é obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>CPF</mat-label>
+
+          <input
+            matInput
+            type="text"
+            formControlName="cpf"
+          >
+
+          <mat-error
+            *ngIf="pessoaForm.get('cpf')?.hasError('required')"
+          >
+            CPF é obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>E-mail</mat-label>
+
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+          >
+
+          <mat-error
+            *ngIf="pessoaForm.get('email')?.hasError('required')"
+          >
+            E-mail é obrigatório
+          </mat-error>
+
+          <mat-error
+            *ngIf="pessoaForm.get('email')?.hasError('email')"
+          >
+            E-mail inválido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Telefone</mat-label>
+
+          <input
+            matInput
+            type="text"
+            formControlName="telefone"
+          >
+
+          <mat-error
+            *ngIf="pessoaForm.get('telefone')?.hasError('required')"
+          >
+            Telefone é obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <div class="acoes">
+
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="cancelar()"
+            [disabled]="salvando"
+          >
+            Cancelar
+          </button>
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="pessoaForm.invalid || salvando"
+          >
+            {{ salvando ? 'Salvando...' : 'Cadastrar' }}
+          </button>
+
+        </div>
+
+      </form>
+
+    </mat-card-content>
+
+  </mat-card>
+
+</div>
