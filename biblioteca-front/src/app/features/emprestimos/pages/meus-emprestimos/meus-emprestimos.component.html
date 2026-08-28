@@ -1,1 +1,142 @@
-<p> meus emprestimos works!</p>
+<div class="container">
+
+  <h1>Meus empréstimos</h1>
+
+  <div *ngIf="carregando" class="carregando">
+    Carregando empréstimos...
+  </div>
+
+  <div
+    *ngIf="!carregando && emprestimos.length === 0"
+  >
+    <p>Você não possui empréstimos.</p>
+  </div>
+
+  <div
+    class="tabela-container"
+    *ngIf="!carregando && emprestimos.length > 0"
+  >
+
+    <table mat-table [dataSource]="emprestimos">
+
+      <ng-container matColumnDef="livro"> <!-- Coluna do livro -->
+
+        <th mat-header-cell *matHeaderCellDef>
+          Livro
+        </th>
+
+        <td mat-cell *matCellDef="let emprestimo">
+          {{ emprestimo.livroTitulo }}
+        </td>
+
+      </ng-container>
+
+      <ng-container matColumnDef="dataEmprestimo">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Empréstimo
+        </th>
+
+        <td mat-cell *matCellDef="let emprestimo">
+          {{ emprestimo.dataDoEmprestimo | date:'dd/MM/yyyy' }}
+        </td>
+
+      </ng-container>
+
+      <ng-container matColumnDef="vencimento">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Vencimento
+        </th>
+
+        <td mat-cell *matCellDef="let emprestimo">
+          {{ emprestimo.dataDoVencimentoDoEmprestimo | date:'dd/MM/yyyy' }}
+        </td>
+
+      </ng-container>
+
+      <ng-container matColumnDef="retorno">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Retorno
+        </th>
+
+        <td mat-cell *matCellDef="let emprestimo">
+
+          <span *ngIf="emprestimo.dataDoRetorno">
+            {{ emprestimo.dataDoRetorno | date:'dd/MM/yyyy' }}
+          </span>
+
+          <span *ngIf="!emprestimo.dataDoRetorno">
+            Não devolvido
+          </span>
+
+        </td>
+
+      </ng-container>
+
+      <ng-container matColumnDef="dias">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Dias emprestado
+        </th>
+
+        <td mat-cell *matCellDef="let emprestimo">
+          {{ emprestimo.diasEmprestado }}
+        </td>
+
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Status
+        </th>
+
+        <td mat-cell *matCellDef="let emprestimo">
+
+          <span *ngIf="emprestimo.atrasado">
+            Atrasado
+          </span>
+
+          <span *ngIf="!emprestimo.atrasado">
+            Em dia
+          </span>
+
+        </td>
+
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+
+      <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+
+    </table>
+
+  </div>
+
+  <div class="paginacao" *ngIf="!carregando && emprestimos.length > 0">
+
+    <button
+      mat-stroked-button
+      (click)="paginaAnterior()"
+      [disabled]="paginaAtual === 0"
+    >
+      Anterior
+    </button>
+
+    <span>
+      Página {{ paginaAtual + 1 }} de {{ totalPaginas }}
+    </span>
+
+    <button
+      mat-stroked-button
+      (click)="proximaPagina()"
+      [disabled]="paginaAtual >= totalPaginas - 1"
+    >
+      Próxima
+    </button>
+
+  </div>
+
+</div>
