@@ -7,7 +7,8 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTableModule } from "@angular/material/table";
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -21,7 +22,9 @@ import { FormsModule } from '@angular/forms';
     MatInputModule,
     MatButtonModule,
     MatTableModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    MatCardModule
 ]
 })
 export class LivrosModule { }

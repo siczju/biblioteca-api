@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { Livro } from '../models/livro.model';
 import { Pagina } from 'src/app/models/pagina.model';
 
+import { CriarLivro } from '../models/criar-livro.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,6 +15,16 @@ export class LivroService {
   private readonly apiUrl = 'http://localhost:8080/livros';
 
   constructor(private http: HttpClient) {}
+
+  cadastrarLivro(livro: CriarLivro): Observable<Livro> {
+    return this.http.post<Livro>(
+      this.apiUrl,
+      livro,
+      {
+        withCredentials: true
+      }
+    );
+  } 
 
   listarLivros(
     pagina: number,

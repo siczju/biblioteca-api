@@ -1,1 +1,114 @@
-<p>cadastro-livro works!</p>
+<div class="container">
+
+  <mat-card>
+
+    <mat-card-header>
+      <mat-card-title>
+        Cadastro de Livro
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <form
+        [formGroup]="livroForm"
+        (ngSubmit)="cadastrar()"
+      >
+
+        <mat-form-field appearance="outline">
+          <mat-label>Título</mat-label>
+
+          <input
+            matInput
+            type="text"
+            formControlName="titulo"
+          >
+
+          <mat-error
+            *ngIf="livroForm.get('titulo')?.hasError('required')"
+          >
+            Título é obrigatório
+          </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Descrição</mat-label>
+
+          <textarea
+            matInput
+            formControlName="descricao"
+            rows="4"
+          ></textarea>
+
+          <mat-error
+            *ngIf="livroForm.get('descricao')?.hasError('required')"
+          >
+            Descrição é obrigatória
+          </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Categoria</mat-label>
+
+          <input
+            matInput
+            type="text"
+            formControlName="categoria"
+          >
+
+          <mat-error
+            *ngIf="livroForm.get('categoria')?.hasError('required')"
+          >
+            Categoria é obrigatória
+          </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Autor</mat-label>
+
+          <input
+            matInput
+            type="text"
+            formControlName="autor"
+          >
+
+          <mat-error
+            *ngIf="livroForm.get('autor')?.hasError('required')"
+          >
+            Autor é obrigatório
+          </mat-error>
+
+        </mat-form-field>
+
+        <div class="acoes">
+
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="cancelar()"
+            [disabled]="salvando"
+          >
+            Cancelar
+          </button>
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="livroForm.invalid || salvando"
+          >
+            {{ salvando ? 'Salvando...' : 'Cadastrar' }}
+          </button>
+
+        </div>
+
+      </form>
+
+    </mat-card-content>
+
+  </mat-card>
+
+</div>
