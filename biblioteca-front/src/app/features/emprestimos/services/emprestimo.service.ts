@@ -8,6 +8,8 @@ import { Pagina } from '../../../models/pagina.model';
 import { Emprestimo } from './../models/emprestimo.model';
 import { EmprestimoStatus } from './../../../enums/emprestimo-status.enum';
 
+import { CriarEmprestimo } from '../models/criar-emprestimo.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,6 +18,16 @@ export class EmprestimoService {
   private readonly apiUrl = 'http://localhost:8080/emprestimos';
 
   constructor(private http: HttpClient) {}
+
+  cadastrarEmprestimo(emprestimo: CriarEmprestimo): Observable<any> {
+    return this.http.post(
+      this.apiUrl,
+      emprestimo,
+      {
+        withCredentials: true
+      }
+    );
+  }
 
   listarEmprestimos(
     pagina: number,

@@ -1,1 +1,97 @@
-<p>cadastro-emprestimo works!</p>
+<div class="container">
+
+  <mat-card>
+
+    <mat-card-header>
+      <mat-card-title>
+        Novo empréstimo
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <div *ngIf="carregando" class="carregando">
+        Carregando dados...
+      </div>
+
+      <form
+        *ngIf="!carregando"
+        [formGroup]="emprestimoForm"
+        (ngSubmit)="cadastrar()"
+      >
+
+        <mat-form-field appearance="outline">
+
+          <mat-label>Pessoa</mat-label>
+
+          <mat-select formControlName="pessoaId">
+
+            <mat-option
+              *ngFor="let pessoa of pessoas"
+              [value]="pessoa.id"
+            >
+              {{ pessoa.nome }} - {{ pessoa.cpf }}
+            </mat-option>
+
+          </mat-select>
+
+          <mat-error
+            *ngIf="emprestimoForm.get('pessoaId')?.hasError('required')"
+          >
+            Pessoa é obrigatória
+          </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+
+          <mat-label>Livro</mat-label>
+
+          <mat-select formControlName="livroId">
+
+            <mat-option
+              *ngFor="let livro of livros"
+              [value]="livro.id"
+            >
+              {{ livro.titulo }} - {{ livro.autor }}
+            </mat-option>
+
+          </mat-select>
+
+          <mat-error
+            *ngIf="emprestimoForm.get('livroId')?.hasError('required')"
+          >
+            Livro é obrigatório
+          </mat-error>
+
+        </mat-form-field>
+
+        <div class="acoes">
+
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="cancelar()"
+            [disabled]="salvando"
+          >
+            Cancelar
+          </button>
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="emprestimoForm.invalid || salvando"
+          >
+            {{ salvando ? 'Salvando...' : 'Cadastrar empréstimo' }}
+          </button>
+
+        </div>
+
+      </form>
+
+    </mat-card-content>
+
+  </mat-card>
+
+</div>

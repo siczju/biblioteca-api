@@ -4,6 +4,13 @@
   padding: 0 20px;
 }
 
+.cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
 .filtros {
   display: flex;
   align-items: center;
