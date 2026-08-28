@@ -3,8 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ListaLivrosComponent } from './pages/lista-livros/lista-livros.component';
 import { CadastroLivroComponent } from './pages/cadastro-livro/cadastro-livro.component';
 import { LivrosRoutingModule } from './livros-routing.module';
-
-
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatButtonModule } from "@angular/material/button";
+import { MatTableModule } from "@angular/material/table";
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -13,7 +16,12 @@ import { LivrosRoutingModule } from './livros-routing.module';
   ],
   imports: [
     CommonModule,
-    LivrosRoutingModule
-  ]
+    LivrosRoutingModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatTableModule,
+    FormsModule
+]
 })
 export class LivrosModule { }

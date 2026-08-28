@@ -1,1 +1,160 @@
-<p>lista-pessoas works!</p>
+<div class="container">
+
+  <h1>Pessoas</h1>
+
+  <div class="filtros">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Buscar</mat-label>
+
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="filtro"
+        (keyup.enter)="pesquisar()"
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>Buscar por</mat-label>
+
+      <mat-select [(ngModel)]="tipoFiltro">
+        <mat-option value="nome">
+          Nome
+        </mat-option>
+
+        <mat-option value="cpf">
+          CPF
+        </mat-option>
+      </mat-select>
+
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="pesquisar()"
+    >
+      Pesquisar
+    </button>
+
+    <button
+      mat-stroked-button
+      (click)="limparBusca()"
+    >
+      Limpar
+    </button>
+
+  </div>
+
+  <div
+    *ngIf="carregando"
+    class="carregando"
+  >
+    Carregando pessoas...
+  </div>
+
+  <div
+    class="tabela-container"
+    *ngIf="!carregando && pessoas.length > 0"
+  >
+
+    <table mat-table [dataSource]="pessoas">
+
+      <ng-container matColumnDef="nome">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Nome
+        </th>
+
+        <td mat-cell *matCellDef="let pessoa">
+          {{ pessoa.nome }}
+        </td>
+
+      </ng-container>
+
+      <ng-container matColumnDef="cpf">
+
+        <th mat-header-cell *matHeaderCellDef>
+          CPF
+        </th>
+
+        <td mat-cell *matCellDef="let pessoa">
+          {{ pessoa.cpf }}
+        </td>
+
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+
+        <th mat-header-cell *matHeaderCellDef>
+          E-mail
+        </th>
+
+        <td mat-cell *matCellDef="let pessoa">
+          {{ pessoa.email }}
+        </td>
+
+      </ng-container>
+
+      <ng-container matColumnDef="telefone">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Telefone
+        </th>
+
+        <td mat-cell *matCellDef="let pessoa">
+          {{ pessoa.telefone }}
+        </td>
+
+      </ng-container>
+
+      <tr
+        mat-header-row
+        *matHeaderRowDef="colunas"
+      ></tr>
+
+      <tr
+        mat-row
+        *matRowDef="let row; columns: colunas;"
+      ></tr>
+
+    </table>
+
+  </div>
+
+  <div
+    *ngIf="!carregando && pessoas.length === 0"
+  >
+    <p>Nenhuma pessoa encontrada.</p>
+  </div>
+
+  <div
+    class="paginacao"
+    *ngIf="!carregando && pessoas.length > 0"
+  >
+
+    <button
+      mat-stroked-button
+      (click)="paginaAnterior()"
+      [disabled]="paginaAtual === 0"
+    >
+      Anterior
+    </button>
+
+    <span>
+      Página {{ paginaAtual + 1 }} de {{ totalPaginas }}
+    </span>
+
+    <button
+      mat-stroked-button
+      (click)="proximaPagina()"
+      [disabled]="paginaAtual >= totalPaginas - 1"
+    >
+      Próxima
+    </button>
+
+  </div>
+
+</div>
