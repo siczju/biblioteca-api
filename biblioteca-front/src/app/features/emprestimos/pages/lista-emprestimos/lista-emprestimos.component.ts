@@ -21,7 +21,8 @@ export class ListaEmprestimosComponent implements OnInit {
     'vencimento',
     'retorno',
     'dias',
-    'status'
+    'status',
+    'acoes'
   ];
 
   paginaAtual = 0;
@@ -41,6 +42,20 @@ export class ListaEmprestimosComponent implements OnInit {
 
   ngOnInit(): void {
     this.buscarEmprestimos();
+  }
+
+  devolver(id: number): void {
+
+    this.emprestimoService.devolverEmprestimo(id).subscribe({
+      next: () => {
+        console.log('Empréstimo devolvido com sucesso!');
+        this.buscarEmprestimos();
+      },
+
+      error: (erro) => {
+        console.error('Erro ao devolver empréstimo:', erro);
+      }
+    });
   }
 
   buscarEmprestimos(): void {

@@ -169,6 +169,22 @@
 
       </ng-container>
 
+      <ng-container matColumnDef="acoes">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Ações
+        </th>
+
+        <td mat-cell *matCellDef="let emprestimo">
+
+          <button [disabled]="emprestimo.status !== EmprestimoStatus.EMPRESTADO" mat-stroked-button color="primary" (click)="devolver(emprestimo.id)">
+            Devolver
+          </button>
+
+        </td>
+
+      </ng-container>
+
       <tr
         mat-header-row
         *matHeaderRowDef="colunas"

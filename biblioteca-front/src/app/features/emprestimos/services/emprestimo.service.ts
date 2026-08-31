@@ -29,6 +29,16 @@ export class EmprestimoService {
     );
   }
 
+  devolverEmprestimo(id: number): Observable<void> {
+    return this.http.put<void>(
+      `${this.apiUrl}/devolver/${id}`,
+      null,
+      {
+        withCredentials: true
+      }
+    );
+  }
+
   listarEmprestimos(
     pagina: number,
     itens: number,
