@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,Validators } from '@angular/forms';
 
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute  } from '@angular/router';
 
 import { LivroService } from '../../services/livro.service';
 import { LivroStatus } from './../../../../enums/livro-status.enum';
+import { CriarLivro } from '../../models/criar-livro.model'
+import { Livro } from '../../models/livro.model';;
 
 @Component({
   selector: 'app-cadastro-livro',
@@ -14,12 +16,17 @@ import { LivroStatus } from './../../../../enums/livro-status.enum';
 export class CadastroLivroComponent implements OnInit {
 
   livroForm!: FormGroup;
+  livroOriginal?: Livro;
 
+  idLivro?: number;
+  
+  editando = false;
   salvando = false;
 
   constructor(
     private fb: FormBuilder,
     private livroService: LivroService,
+    private route: ActivatedRoute,
     private router: Router
   ) {}
 
@@ -30,10 +37,41 @@ export class CadastroLivroComponent implements OnInit {
       categoria: ['', Validators.required],
       autor: ['', Validators.required]
     });
+
+    const id = this.route.snapshot.paramMap.get('id'); // pega o id da url: /livros/editar/5
+
+    if (id) {
+      this.idLivro = Number(id); // id vem como string ent tem q fazer o cast
+      this.editando = true;
+
+      this.carregarLivro();
+    }
+
+  }
+
+  carregarLivro(): void {
+    this.livroService.getLivroById(this.idLivro!).subscribe({
+      next: (livro) => {
+
+        this.livroOriginal = livro;
+
+        this.livroForm.patchValue({ // não atualizar nem status nem id, só os campos do form
+          titulo: livro.titulo,
+          descricao: livro.descricao,
+          categoria: livro.categoria,
+          autor: livro.autor
+        });
+
+      },
+
+      error: (erro) => {
+        console.error('Erro ao carregar livro:', erro);
+        this.router.navigate(['/livros']);
+      }
+    });
   }
 
   cadastrar(): void {
-
     if (this.livroForm.invalid) {
       this.livroForm.markAllAsTouched();
       return;
@@ -41,26 +79,53 @@ export class CadastroLivroComponent implements OnInit {
 
     this.salvando = true;
 
-    const livro = {
+    const status = this.editando && this.livroOriginal
+      ? this.livroOriginal.status
+      : LivroStatus.DISPONIVEL;
+
+    const livro: CriarLivro = {
       ...this.livroForm.value,
-      status: LivroStatus.DISPONIVEL
+      status
     };
 
-    this.livroService.cadastrarLivro(livro).subscribe({
-      next: (resposta) => {
-        console.log('Livro cadastrado com sucesso!', resposta);
+    if (this.editando && this.idLivro) {
 
-        this.salvando = false;
+      this.livroService
+        .editarLivro(this.idLivro, livro)
+        .subscribe({
+          next: (resposta) => {
+            console.log('Livro atualizado com sucesso!', resposta);
 
-        this.router.navigate(['/livros']);
-      },
+            this.salvando = false;
+            this.router.navigate(['/livros']);
+          },
 
-      error: (erro) => {
-        console.error('Erro ao cadastrar livro:', erro);
+          error: (erro) => {
+            console.error('Erro ao atualizar livro:', erro);
 
-        this.salvando = false;
-      }
-    });
+            this.salvando = false;
+          }
+        });
+
+      return;
+    }
+
+    this.livroService
+      .cadastrarLivro(livro)
+      .subscribe({
+        next: (resposta) => {
+          console.log('Livro cadastrado com sucesso!', resposta);
+
+          this.salvando = false;
+          this.router.navigate(['/livros']);
+        },
+
+        error: (erro) => {
+          console.error('Erro ao cadastrar livro:', erro);
+
+          this.salvando = false;
+        }
+      });
   }
 
   cancelar(): void {

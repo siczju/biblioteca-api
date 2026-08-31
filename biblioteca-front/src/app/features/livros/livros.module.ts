@@ -10,6 +10,7 @@ import { MatTableModule } from "@angular/material/table";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from "@angular/material/card";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatIconModule } from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     FormsModule,
     ReactiveFormsModule,
     MatCardModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatIconModule
 ]
 })
 export class LivrosModule { }

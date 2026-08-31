@@ -26,6 +26,25 @@ export class LivroService {
     );
   } 
 
+  editarLivro(id: number, livro: CriarLivro): Observable<Livro> {
+    return this.http.put<Livro>(
+      `${this.apiUrl}/${id}`,
+      livro,
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+  getLivroById(id: number): Observable<Livro> {
+    return this.http.get<Livro>(
+      `${this.apiUrl}/${id}`,
+      {
+        withCredentials: true
+      }
+    );
+  }
+
   listarLivros(
     pagina: number,
     itens: number,

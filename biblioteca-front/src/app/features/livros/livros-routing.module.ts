@@ -13,6 +13,11 @@ const routes: Routes = [
   {
     path: 'cadastro',
     component: CadastroLivroComponent
+  },
+
+  {
+  path: 'editar/:id', // O :id é um parâmetro da rota. se acessar: /livros/editar/5 o angular entende id = 5
+  component: CadastroLivroComponent
   }
 ]
 

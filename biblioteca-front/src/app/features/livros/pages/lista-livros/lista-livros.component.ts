@@ -19,7 +19,8 @@ export class ListaLivrosComponent implements OnInit {
     'descricao',
     'categoria',
     'autor',
-    'status'
+    'status',
+    'acoes'
   ];
 
   paginaAtual = 0;
