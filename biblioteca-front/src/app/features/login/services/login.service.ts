@@ -20,4 +20,15 @@ export class LoginService {
       { withCredentials: true }
     );
   }
+
+  logout(): Observable<void> {
+    return this.http.post<void>(
+      `${this.apiUrl}/logout`,
+      null,
+      {
+        withCredentials: true
+      }
+    );
+  }
+
 }
