@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import {FormBuilder,FormGroup,Validators} from '@angular/forms';
 
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute  } from '@angular/router';
 
 import { PessoaService } from '../../services/pessoa.service';
+import { Pessoa } from '../../models/pessoa.model';
+import { CriarPessoa } from '../../models/criar-pessoa.model';
 
 @Component({
   selector: 'app-cadastro-pessoa',
@@ -18,11 +16,15 @@ export class CadastroPessoaComponent implements OnInit {
 
   pessoaForm!: FormGroup;
 
+  idPessoa?: number;
+
+  editando = false;
   salvando = false;
 
   constructor(
     private fb: FormBuilder,
     private pessoaService: PessoaService,
+    private route: ActivatedRoute,
     private router: Router
   ) {}
 
@@ -33,7 +35,37 @@ export class CadastroPessoaComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       telefone: ['', Validators.required]
     });
+
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if (id) {
+      this.idPessoa = Number(id);
+      this.editando = true;
+
+      this.carregarPessoa();
+    }
+      
   }
+
+  carregarPessoa(): void {
+  this.pessoaService.getPessoaById(this.idPessoa!).subscribe({
+    next: (pessoa) => {
+
+      this.pessoaForm.patchValue({
+        nome: pessoa.nome,
+        cpf: pessoa.cpf,
+        email: pessoa.email,
+        telefone: pessoa.telefone
+      });
+
+    },
+
+    error: (erro) => {
+      console.error('Erro ao carregar pessoa:', erro);
+      this.router.navigate(['/pessoas']);
+    }
+  });
+}
 
   cadastrar(): void {
 
@@ -44,23 +76,56 @@ export class CadastroPessoaComponent implements OnInit {
 
     this.salvando = true;
 
-    const pessoa = this.pessoaForm.value;
+    const pessoa: CriarPessoa = this.pessoaForm.value;
 
-    this.pessoaService.cadastrarPessoa(pessoa).subscribe({
-      next: (resposta) => {
-        console.log('Pessoa cadastrada com sucesso!', resposta);
+    if (this.editando && this.idPessoa) {
 
-        this.salvando = false;
+      this.pessoaService.editarPessoa(this.idPessoa, pessoa)
+        .subscribe({
+          next: (resposta) => {
+            console.log(
+              'Pessoa atualizada com sucesso!',
+              resposta
+            );
 
-        this.router.navigate(['/pessoas']);
-      },
+            this.salvando = false;
+            this.router.navigate(['/pessoas']);
+          },
 
-      error: (erro) => {
-        console.error('Erro ao cadastrar pessoa:', erro);
+          error: (erro) => {
+            console.error(
+              'Erro ao atualizar pessoa:',
+              erro
+            );
 
-        this.salvando = false;
-      }
-    });
+            this.salvando = false;
+          }
+        });
+
+      return;
+    }
+
+    this.pessoaService.cadastrarPessoa(pessoa)
+      .subscribe({
+        next: (resposta) => {
+          console.log(
+            'Pessoa cadastrada com sucesso!',
+            resposta
+          );
+
+          this.salvando = false;
+          this.router.navigate(['/pessoas']);
+        },
+
+        error: (erro) => {
+          console.error(
+            'Erro ao cadastrar pessoa:',
+            erro
+          );
+
+          this.salvando = false;
+        }
+      });
   }
 
   cancelar(): void {

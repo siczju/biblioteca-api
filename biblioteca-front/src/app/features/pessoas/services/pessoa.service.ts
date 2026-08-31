@@ -26,6 +26,25 @@ export class PessoaService {
     );
   }
 
+    editarPessoa(id: number, pessoa: CriarPessoa): Observable<Pessoa> {
+      return this.http.put<Pessoa>(
+        `${this.apiUrl}/${id}`,
+        pessoa,
+        {
+          withCredentials: true
+        }
+      );
+    }
+  
+    getPessoaById(id: number): Observable<Pessoa> {
+      return this.http.get<Pessoa>(
+        `${this.apiUrl}/${id}`,
+        {
+          withCredentials: true
+        }
+      );
+    }
+
   listarPessoas(
     pagina: number,
     itens: number,

@@ -17,7 +17,8 @@ export class ListaPessoasComponent implements OnInit {
     'nome',
     'cpf',
     'email',
-    'telefone'
+    'telefone',
+    'acoes'
   ];
 
   paginaAtual = 0;

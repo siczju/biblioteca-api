@@ -120,6 +120,22 @@
 
       </ng-container>
 
+      <ng-container matColumnDef="acoes">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Ações
+        </th>
+
+        <td mat-cell *matCellDef="let pessoa">
+
+          <button mat-icon-button color="primary" [routerLink]="['/pessoas/editar', pessoa.id]">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+        </td>
+
+      </ng-container>
+
       <tr
         mat-header-row
         *matHeaderRowDef="colunas"
