@@ -26,6 +26,15 @@ export class LivroService {
     );
   } 
 
+  excluirLivro(id: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/${id}`,
+      {
+        withCredentials: true
+      }
+    );
+  }
+
   editarLivro(id: number, livro: CriarLivro): Observable<Livro> {
     return this.http.put<Livro>(
       `${this.apiUrl}/${id}`,

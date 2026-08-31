@@ -38,6 +38,24 @@ export class ListaPessoasComponent implements OnInit {
     this.buscarPessoas();
   }
 
+  excluirPessoa(id: number): void {
+
+    if (!confirm('Tem certeza que deseja excluir esta pessoa?')) {
+      return;
+    }
+
+    this.pessoaService.excluirPessoa(id).subscribe({
+      next: () => {
+        console.log('Pessoa excluída com sucesso!');
+        this.buscarPessoas();
+      },
+
+      error: (erro) => {
+        console.error('Erro ao excluir pessoa:', erro);
+      }
+    });
+  }
+
   buscarPessoas(): void {
     this.carregando = true;
 

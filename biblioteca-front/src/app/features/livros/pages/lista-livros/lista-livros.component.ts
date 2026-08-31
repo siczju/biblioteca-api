@@ -40,6 +40,24 @@ export class ListaLivrosComponent implements OnInit {
     this.buscarLivros();
   }
 
+  excluirLivro(id: number): void {
+
+    if (!confirm('Tem certeza que deseja excluir este livro?')) {
+      return;
+    }
+
+    this.livroService.excluirLivro(id).subscribe({
+      next: () => {
+        console.log('Livro excluído com sucesso!');
+        this.buscarLivros();
+      },
+
+      error: (erro) => {
+        console.error('Erro ao excluir livro:', erro);
+      }
+    });
+}
+
   buscarLivros(): void {
     this.carregando = true;
 

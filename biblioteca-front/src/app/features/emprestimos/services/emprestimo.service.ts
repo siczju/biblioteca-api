@@ -29,6 +29,15 @@ export class EmprestimoService {
     );
   }
 
+  excluirEmprestimo(id: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/${id}`,
+      {
+        withCredentials: true
+      }
+    );
+  }
+
   devolverEmprestimo(id: number): Observable<void> {
     return this.http.put<void>(
       `${this.apiUrl}/devolver/${id}`,

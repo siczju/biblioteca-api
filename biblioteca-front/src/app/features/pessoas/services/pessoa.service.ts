@@ -26,6 +26,15 @@ export class PessoaService {
     );
   }
 
+  excluirPessoa(id: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/${id}`,
+      {
+        withCredentials: true
+      }
+    );
+  }
+
     editarPessoa(id: number, pessoa: CriarPessoa): Observable<Pessoa> {
       return this.http.put<Pessoa>(
         `${this.apiUrl}/${id}`,

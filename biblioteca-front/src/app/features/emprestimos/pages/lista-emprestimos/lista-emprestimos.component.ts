@@ -44,6 +44,24 @@ export class ListaEmprestimosComponent implements OnInit {
     this.buscarEmprestimos();
   }
 
+  excluirEmprestimo(id: number): void {
+
+    if (!confirm('Tem certeza que deseja excluir este empréstimo?')) {
+      return;
+    }
+
+    this.emprestimoService.excluirEmprestimo(id).subscribe({
+      next: () => {
+        console.log('Empréstimo excluído com sucesso!');
+        this.buscarEmprestimos();
+      },
+
+      error: (erro) => {
+        console.error('Erro ao excluir empréstimo:', erro);
+      }
+    });
+  }
+
   devolver(id: number): void {
 
     this.emprestimoService.devolverEmprestimo(id).subscribe({
