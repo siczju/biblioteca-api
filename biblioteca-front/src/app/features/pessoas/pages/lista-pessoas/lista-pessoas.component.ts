@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { PessoaService } from '../../services/pessoa.service';
 import { Pessoa } from '../../models/pessoa.model';
 import { Pagina } from 'src/app/models/pagina.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-lista-pessoas',
@@ -31,7 +32,8 @@ export class ListaPessoasComponent implements OnInit {
   carregando = false;
 
   constructor(
-    private pessoaService: PessoaService
+    private pessoaService: PessoaService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -46,11 +48,12 @@ export class ListaPessoasComponent implements OnInit {
 
     this.pessoaService.excluirPessoa(id).subscribe({
       next: () => {
-        console.log('Pessoa excluída com sucesso!');
+        this.snackBar.open('Pessoa excluída com sucesso!', 'Fechar', {duration: 3000});
         this.buscarPessoas();
       },
 
       error: (erro) => {
+        this.snackBar.open('Erro ao excluir pessoa!', 'Fechar', {duration: 3000});
         console.error('Erro ao excluir pessoa:', erro);
       }
     });

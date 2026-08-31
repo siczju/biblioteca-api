@@ -16,6 +16,8 @@ import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
 @NgModule({
   declarations: [
     ListaEmprestimosComponent,
@@ -33,6 +35,7 @@ import { MatIconModule } from '@angular/material/icon';
     FormsModule,
     MatCardModule,
     ReactiveFormsModule,
+    MatSnackBarModule,
     MatIconModule
   ]
 })

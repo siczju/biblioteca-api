@@ -6,6 +6,7 @@ import { Router, ActivatedRoute  } from '@angular/router';
 import { PessoaService } from '../../services/pessoa.service';
 import { Pessoa } from '../../models/pessoa.model';
 import { CriarPessoa } from '../../models/criar-pessoa.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-cadastro-pessoa',
@@ -25,6 +26,7 @@ export class CadastroPessoaComponent implements OnInit {
     private fb: FormBuilder,
     private pessoaService: PessoaService,
     private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
     private router: Router
   ) {}
 
@@ -83,16 +85,14 @@ export class CadastroPessoaComponent implements OnInit {
       this.pessoaService.editarPessoa(this.idPessoa, pessoa)
         .subscribe({
           next: (resposta) => {
-            console.log(
-              'Pessoa atualizada com sucesso!',
-              resposta
-            );
+            this.snackBar.open('Pessoa atualizada com sucesso!', 'Fechar', {duration: 3000});
 
             this.salvando = false;
             this.router.navigate(['/pessoas']);
           },
 
           error: (erro) => {
+            this.snackBar.open('Erro ao atualizar pessoa!', 'Fechar', {duration: 3000});
             console.error(
               'Erro ao atualizar pessoa:',
               erro
@@ -108,6 +108,7 @@ export class CadastroPessoaComponent implements OnInit {
     this.pessoaService.cadastrarPessoa(pessoa)
       .subscribe({
         next: (resposta) => {
+          this.snackBar.open('Pessoa cadastrada com sucesso!', 'Fechar', {duration: 3000});
           console.log(
             'Pessoa cadastrada com sucesso!',
             resposta
@@ -118,6 +119,7 @@ export class CadastroPessoaComponent implements OnInit {
         },
 
         error: (erro) => {
+          this.snackBar.open('Erro ao cadastrar pessoa!', 'Fechar', {duration: 3000});
           console.error(
             'Erro ao cadastrar pessoa:',
             erro

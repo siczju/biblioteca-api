@@ -4,6 +4,7 @@ import { EmprestimoService } from '../../services/emprestimo.service';
 import { Emprestimo } from '../../models/emprestimo.model';
 import { EmprestimoStatus } from './../../../../enums/emprestimo-status.enum';
 import { Pagina } from '../../../../models/pagina.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-lista-emprestimos',
@@ -37,7 +38,8 @@ export class ListaEmprestimosComponent implements OnInit {
   readonly EmprestimoStatus = EmprestimoStatus;
 
   constructor(
-    private emprestimoService: EmprestimoService
+    private emprestimoService: EmprestimoService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -52,11 +54,24 @@ export class ListaEmprestimosComponent implements OnInit {
 
     this.emprestimoService.excluirEmprestimo(id).subscribe({
       next: () => {
-        console.log('Empréstimo excluído com sucesso!');
+
+        this.snackBar.open(
+          'Empréstimo excluído com sucesso!',
+          'Fechar',
+          { duration: 3000 }
+        );
+
         this.buscarEmprestimos();
       },
 
       error: (erro) => {
+
+        this.snackBar.open(
+          'Erro ao excluir empréstimo!',
+          'Fechar',
+          { duration: 3000 }
+        );
+
         console.error('Erro ao excluir empréstimo:', erro);
       }
     });
@@ -66,11 +81,24 @@ export class ListaEmprestimosComponent implements OnInit {
 
     this.emprestimoService.devolverEmprestimo(id).subscribe({
       next: () => {
-        console.log('Empréstimo devolvido com sucesso!');
+
+        this.snackBar.open(
+          'Empréstimo devolvido com sucesso!',
+          'Fechar',
+          { duration: 3000 }
+        );
+
         this.buscarEmprestimos();
       },
 
       error: (erro) => {
+
+        this.snackBar.open(
+          'Erro ao devolver empréstimo!',
+          'Fechar',
+          { duration: 3000 }
+        );
+
         console.error('Erro ao devolver empréstimo:', erro);
       }
     });

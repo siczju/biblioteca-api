@@ -4,6 +4,7 @@ import { LivroService } from '../../services/livro.service';
 import { Livro } from '../../models/livro.model';
 import { Pagina } from 'src/app/models/pagina.model';
 import { LivroStatus } from 'src/app/enums/livro-status.enum';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-lista-livros',
@@ -33,7 +34,8 @@ export class ListaLivrosComponent implements OnInit {
   readonly LivroStatus = LivroStatus;
 
   constructor(
-    private livroService: LivroService
+    private livroService: LivroService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -48,11 +50,12 @@ export class ListaLivrosComponent implements OnInit {
 
     this.livroService.excluirLivro(id).subscribe({
       next: () => {
-        console.log('Livro excluído com sucesso!');
+        this.snackBar.open('Livro excluído com sucesso!', 'Fechar', {duration: 3000});
         this.buscarLivros();
       },
 
       error: (erro) => {
+        this.snackBar.open('Erro ao excluir o livro!', 'Fechar', {duration: 3000});
         console.error('Erro ao excluir livro:', erro);
       }
     });

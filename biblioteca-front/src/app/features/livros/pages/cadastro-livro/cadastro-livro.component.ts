@@ -7,6 +7,7 @@ import { LivroService } from '../../services/livro.service';
 import { LivroStatus } from './../../../../enums/livro-status.enum';
 import { CriarLivro } from '../../models/criar-livro.model'
 import { Livro } from '../../models/livro.model';;
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-cadastro-livro',
@@ -27,7 +28,8 @@ export class CadastroLivroComponent implements OnInit {
     private fb: FormBuilder,
     private livroService: LivroService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -94,6 +96,8 @@ export class CadastroLivroComponent implements OnInit {
         .editarLivro(this.idLivro, livro)
         .subscribe({
           next: (resposta) => {
+            this.snackBar.open('Livro atualizado com sucesso!', 'Fechar', {duration: 3000});
+
             console.log('Livro atualizado com sucesso!', resposta);
 
             this.salvando = false;
@@ -101,10 +105,12 @@ export class CadastroLivroComponent implements OnInit {
           },
 
           error: (erro) => {
-            console.error('Erro ao atualizar livro:', erro);
+              this.salvando = false;
 
-            this.salvando = false;
-          }
+              this.snackBar.open('Erro ao salvar livro!', 'Fechar', {duration: 3000});
+
+              console.error('Erro ao salvar livro:', erro); 
+            }
         });
 
       return;
@@ -114,7 +120,7 @@ export class CadastroLivroComponent implements OnInit {
       .cadastrarLivro(livro)
       .subscribe({
         next: (resposta) => {
-          console.log('Livro cadastrado com sucesso!', resposta);
+          this.snackBar.open('Livro cadastrado com sucesso!', 'Fechar', {duration: 3000});
 
           this.salvando = false;
           this.router.navigate(['/livros']);
